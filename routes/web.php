@@ -6,7 +6,7 @@ use App\Http\Controllers\DespesaController;
 
 
 Route::get('/', function () {
-return redirect()->route('dashboard');
+    return redirect()->route('dashboard');
 });
 
 
@@ -14,14 +14,14 @@ return redirect()->route('dashboard');
 
 
 Route::middleware('auth')->group(function () {
-Route::get('/dashboard', function(){
-//  criar view dashboard separada
-return view('dashboard');
-})->name('dashboard');
+    Route::get('/dashboard', function () {
+        //  criar view dashboard separada
+        return view('dashboard');
+    })->name('dashboard');
 
 
-Route::resource('despesas', DespesaController::class);
+    Route::resource('despesas', DespesaController::class);
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
