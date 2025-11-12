@@ -9,6 +9,71 @@ use Illuminate\Support\Facades\Auth;
 class DespesaController extends Controller
 {
     /**
+     * Listar despesas do usuário com filtros básicos.
+     */
+    public function index(Request $request)
+    {
+        $filters = $request->validate([
+            'mes'       => 'nullable|integer|between:1,12',
+            'categoria' => 'nullable|string|max:100',
+            'busca'     => 'nullable|string|max:255',
+        ]);
+
+        $meses = [
+            1  => 'Janeiro',
+            2  => 'Fevereiro',
+            3  => 'Março',
+            4  => 'Abril',
+            5  => 'Maio',
+            6  => 'Junho',
+            7  => 'Julho',
+            8  => 'Agosto',
+            9  => 'Setembro',
+            10 => 'Outubro',
+            11 => 'Novembro',
+            12 => 'Dezembro',
+        ];
+
+        $query = Despesa::query()->where('user_id', Auth::id());
+
+        if (!empty($filters['mes'])) {
+            $query->whereMonth('data', $filters['mes']);
+        }
+
+        if (!empty($filters['categoria'])) {
+            $query->where('categoria', $filters['categoria']);
+        }
+
+        if (!empty($filters['busca'])) {
+            $query->where('descricao', 'like', '%' . $filters['busca'] . '%');
+        }
+
+        $despesas = (clone $query)
+            ->orderByDesc('data')
+            ->paginate(10)
+            ->withQueryString();
+
+        $totalPeriodo = (clone $query)->sum('valor');
+
+        return view('despesas.index', [
+            'despesas'             => $despesas,
+            'totalPeriodo'         => $totalPeriodo,
+            'meses'                => $meses,
+            'mesSelecionado'       => $filters['mes'] ?? null,
+            'categoriaSelecionada' => $filters['categoria'] ?? null,
+            'busca'                => $filters['busca'] ?? null,
+        ]);
+    }
+
+    /**
+     * Exibir formulário de criação de despesa.
+     */
+    public function create()
+    {
+        return view('despesas.create');
+    }
+
+    /**
      * Salvar nova despesa no banco
      */
     public function store(Request $request)
