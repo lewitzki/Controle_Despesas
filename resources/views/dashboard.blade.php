@@ -36,7 +36,11 @@
 
         <div class="bg-white p-6 shadow sm:rounded-lg">
             <h2 class="font-semibold text-lg text-gray-800">Gráfico por categoria (mês atual)</h2>
-            <canvas id="chartCategorias" class="mt-6"></canvas>
+            <div class="w-full flex justify-center mt-10">
+                <div class="w-1/3">
+                    <canvas class="w-full" id="chartCategorias"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 

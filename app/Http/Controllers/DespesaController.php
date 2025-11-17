@@ -41,7 +41,7 @@ class DespesaController extends Controller
         }
 
         if (!empty($filters['categoria'])) {
-            $query->where('categoria', $filters['categoria']);
+            $query->where('categoria', 'like', '%' .  $filters['categoria'] . '%');
         }
 
         if (!empty($filters['busca'])) {
